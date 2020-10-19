@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wifi QR Code Generator</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  </head>
+  <body>
+    <input id="wifiName" type="text" value="tosti-ijzer" />
+    <input id="wifiPW" type="text" value="hamenkaas" />
+    <br />
+    <div id="qrcode"></div>
+
+    <script>
+      var qrcode = new QRCode("qrcode");
+
+      // Function that create a new QR code
+      function createQRCode() {
+        let wifiName = document.querySelector("#wifiName").value;
+        let wifiPW = document.querySelector("#wifiPW").value;
+        let qrURL = `WIFI:T:WPA;S:${wifiName};P:${wifiPW};;`;
+
+        qrcode.makeCode(qrURL);
+      }
+      createQRCode();
+
+      // Bind event listeners to input fields
+      var inputFields = document.querySelectorAll("input");
+      inputFields.forEach(function (field) {
+        field.addEventListener("blur", createQRCode);
+        field.addEventListener("keyup", function (event) {
+          if (event.keyCode === 13) {
+            createQRCode();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
