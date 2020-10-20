@@ -167,6 +167,25 @@
     </main>
 
     <script>
+      // Set random wifi name placeholder
+      const WiFiNames = [
+        "Making Wifi Great Again",
+        "FBI Surveillance Van",
+        "Nacho WiFi",
+        "Bill Wi, the Science Fi",
+        "Pretty Fly for a Wi-Fi",
+        "LAN Down Under",
+        "Drop It Like It’s Hotspot",
+        "No More Mister Wifi",
+        "A LANister Never Forgets",
+        "Winternet is Coming",
+        "Error: Please Contact Your ISP",
+        "Gateway 504 Error",
+      ];
+      const randomWiFiName = WiFiNames[Math.floor(Math.random() * WiFiNames.length)];
+      document.querySelector("#wifiName").placeholder = randomWiFiName;
+
+      // Hide password input field when encryption is set to none
       function handleEncryptionChange(event) {
         if (event.target.value === "nopass") {
           document.querySelector("label[for='wifiPW']").style.display = "none";
