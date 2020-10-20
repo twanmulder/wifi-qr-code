@@ -45,14 +45,19 @@
         text-align: center;
       }
 
-      label {
-        font-weight: bold;
+      input {
+        width: 100%;
       }
 
-      input {
+      select {
+        width: 25%;
+        display: block;
+        cursor: pointer;
+      }
+
+      input,
+      select {
         margin: 0.5rem 0 3rem;
-        width: 100%;
-        font-size: 1rem;
       }
 
       button {
@@ -74,12 +79,21 @@
       <hr />
 
       <form onsubmit="return createQRCode(event)" autocomplete="off">
-        <label>
+        <label for="wifiName">
           SSID (Name of the network)
           <input id="wifiName" type="text" placeholder="cool-wifi-name" />
         </label>
 
-        <label>
+        <label for="enc">
+          Encryption
+          <select name="enc" id="enc" onchange="handleEncryptionChange(event)">
+            <option value="WPA">WPA/WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">None</option>
+          </select>
+        </label>
+
+        <label for="wifiPW">
           Key (Password)
           <input id="wifiPW" type="text" placeholder="super-complex-password" />
         </label>
@@ -93,14 +107,25 @@
     <script>
       var qrcode = new QRCode("qrcode");
 
+      function handleEncryptionChange(event) {
+        if (event.target.value === "nopass") {
+          document.querySelector("label[for='wifiPW']").style.display = "none";
+          document.querySelector("label[for='wifiPW'] input").value = "";
+        } else {
+          document.querySelector("label[for='wifiPW']").style.display = "block";
+        }
+      }
+
       // Function that create a new QR code
       function createQRCode(event) {
         event.preventDefault();
 
+        let wifiEncryption = document.querySelector("#enc").value;
         let wifiName = document.querySelector("#wifiName").value;
         let wifiPW = document.querySelector("#wifiPW").value;
-        let qrURL = `WIFI:T:WPA;S:${wifiName};P:${wifiPW};;`;
+        let wifiPWString = wifiPW ? `P:${wifiPW};` : "";
 
+        let qrURL = `WIFI:T:${wifiEncryption};S:${wifiName};${wifiPWString};`;
         qrcode.makeCode(qrURL);
       }
 
