@@ -50,7 +50,7 @@
       }
 
       select {
-        width: 25%;
+        width: 150px;
         display: block;
         cursor: pointer;
       }
@@ -62,6 +62,10 @@
 
       .button {
         width: 100%;
+      }
+
+      .button + .button {
+        margin-top: 1rem;
       }
 
       .wifi-input-wrapper {
@@ -105,6 +109,17 @@
       .hidden {
         display: none;
       }
+
+      @media (min-width: 550px) {
+        .button {
+          width: 48%;
+        }
+
+        .button + .button {
+          margin-top: inherit;
+          margin-left: 1rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -145,6 +160,7 @@
         </label>
 
         <button class="button button-primary">Generate QR Code</button>
+        <a class="button hidden" href="" download="wifi-qrcode.png">Save to device</a>
       </form>
       <br />
       <div id="qrcode"></div>
@@ -183,7 +199,6 @@
         var newType = passwordInputField.getAttribute("type") === "password" ? "text" : "password";
         passwordInputField.setAttribute("type", newType);
 
-        console.log(newType);
         if (newType === "password") {
           document.querySelector(".feather.feather-eye").setAttribute("class", "feather feather-eye hidden");
           document.querySelector(".feather.feather-eye-off").setAttribute("class", "feather feather-eye-off");
@@ -193,6 +208,26 @@
           document.querySelector(".feather.feather-eye-off").setAttribute("class", "feather feather-eye-off hidden");
         }
       }
+
+      // Create listener that updates when new QR code has been added to the image
+      let image = document.querySelector("img");
+      let observer = new MutationObserver(mCallback);
+      let options = {
+        attributes: true,
+      };
+
+      function mCallback(mutations) {
+        for (let mutation of mutations) {
+          if (mutation.type === "attributes") {
+            if (document.querySelector("a.button").className.indexOf("hidden") > -1) {
+              document.querySelector("a.button").classList.remove("hidden");
+            }
+            document.querySelector("a.button").href = image.src;
+          }
+        }
+      }
+
+      observer.observe(image, options);
     </script>
   </body>
 </html>
