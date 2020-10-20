@@ -60,8 +60,38 @@
         margin: 0.5rem 0 3rem;
       }
 
-      button {
+      .button {
         width: 100%;
+      }
+
+      .wifi-input-wrapper {
+        display: flex;
+        margin: 0.5rem 0 3rem;
+      }
+
+      .wifi-input-wrapper input {
+        margin: 0;
+        border-radius: 4px 0 0 4px;
+      }
+
+      .wifi-input-wrapper button {
+        margin: 0;
+        padding: 0 2rem;
+        height: 38px;
+        border-radius: 0 4px 4px 0;
+        border: 1px solid #d1d1d1;
+        border-left-color: transparent;
+        box-shadow: none;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .wifi-input-wrapper button:hover {
+        transform: none;
+
+        background: #efefef;
       }
 
       #qrcode {
@@ -70,6 +100,10 @@
 
       #qrcode img {
         display: inline-block !important;
+      }
+
+      .hidden {
+        display: none;
       }
     </style>
   </head>
@@ -95,7 +129,19 @@
 
         <label for="wifiPW">
           Key (Password)
-          <input id="wifiPW" type="text" placeholder="super-complex-password" />
+          <div class="wifi-input-wrapper">
+            <input id="wifiPW" type="password" placeholder="super-complex-password" />
+            <button onclick="handlePWVisibilityButton(event)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye hidden">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
         </label>
 
         <button class="button button-primary">Generate QR Code</button>
@@ -105,8 +151,6 @@
     </main>
 
     <script>
-      var qrcode = new QRCode("qrcode");
-
       function handleEncryptionChange(event) {
         if (event.target.value === "nopass") {
           document.querySelector("label[for='wifiPW']").style.display = "none";
@@ -117,6 +161,7 @@
       }
 
       // Function that create a new QR code
+      var qrcode = new QRCode("qrcode");
       function createQRCode(event) {
         event.preventDefault();
 
@@ -129,16 +174,25 @@
         qrcode.makeCode(qrURL);
       }
 
-      // Bind event listeners to input fields
-      var inputFields = document.querySelectorAll("input[type='text']");
-      inputFields.forEach(function (field) {
-        field.addEventListener("blur", createQRCode);
-        field.addEventListener("keyup", function (event) {
-          if (event.keyCode === 13) {
-            createQRCode();
-          }
-        });
-      });
+      // Create toggle password visibility button functionality
+      function handlePWVisibilityButton(event) {
+        event.preventDefault();
+
+        // Toggle password input field type (password or text)
+        var passwordInputField = document.querySelector("#wifiPW");
+        var newType = passwordInputField.getAttribute("type") === "password" ? "text" : "password";
+        passwordInputField.setAttribute("type", newType);
+
+        console.log(newType);
+        if (newType === "password") {
+          document.querySelector(".feather.feather-eye").setAttribute("class", "feather feather-eye hidden");
+          document.querySelector(".feather.feather-eye-off").setAttribute("class", "feather feather-eye-off");
+        }
+        if (newType === "text") {
+          document.querySelector(".feather.feather-eye").setAttribute("class", "feather feather-eye");
+          document.querySelector(".feather.feather-eye-off").setAttribute("class", "feather feather-eye-off hidden");
+        }
+      }
     </script>
   </body>
 </html>
