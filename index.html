@@ -4,29 +4,108 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wifi QR Code Generator</title>
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <link rel="stylesheet" href="./css/skeleton.css" />
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 1rem;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        background: #0074fe;
+        position: relative;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+        display: flex;
+        align-items: center;
+      }
+
+      main {
+        width: 100%;
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 8px 28px 0 rgba(34, 33, 81, 0.25);
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      input {
+        margin: 0.5rem 0 3rem;
+        width: 100%;
+        font-size: 1rem;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      #qrcode {
+        text-align: center;
+      }
+
+      #qrcode img {
+        display: inline-block !important;
+      }
+    </style>
   </head>
   <body>
-    <input id="wifiName" type="text" value="tosti-ijzer" />
-    <input id="wifiPW" type="text" value="hamenkaas" />
-    <br />
-    <div id="qrcode"></div>
+    <main>
+      <h1>WiFi QR Code Generator</h1>
+      <hr />
+
+      <form onsubmit="return createQRCode(event)" autocomplete="off">
+        <label>
+          SSID (Name of the network)
+          <input id="wifiName" type="text" placeholder="cool-wifi-name" />
+        </label>
+
+        <label>
+          Key (Password)
+          <input id="wifiPW" type="text" placeholder="super-complex-password" />
+        </label>
+
+        <button class="button button-primary">Generate QR Code</button>
+      </form>
+      <br />
+      <div id="qrcode"></div>
+    </main>
 
     <script>
       var qrcode = new QRCode("qrcode");
 
       // Function that create a new QR code
-      function createQRCode() {
+      function createQRCode(event) {
+        event.preventDefault();
+
         let wifiName = document.querySelector("#wifiName").value;
         let wifiPW = document.querySelector("#wifiPW").value;
         let qrURL = `WIFI:T:WPA;S:${wifiName};P:${wifiPW};;`;
 
         qrcode.makeCode(qrURL);
       }
-      createQRCode();
 
       // Bind event listeners to input fields
-      var inputFields = document.querySelectorAll("input");
+      var inputFields = document.querySelectorAll("input[type='text']");
       inputFields.forEach(function (field) {
         field.addEventListener("blur", createQRCode);
         field.addEventListener("keyup", function (event) {
